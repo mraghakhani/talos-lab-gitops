@@ -62,3 +62,18 @@ tasks:
     desc: Show root GitOps Application sync/health state
     cmds:
       - ./scripts/10-bootstrap-status.sh
+
+  gitea:ssh:check:
+    desc: Verify Gitea deploy-key SSH and repository access
+    cmds:
+      - ./scripts/12-gitea-ssh-check.sh
+
+  gitea:known-hosts:update:
+    desc: Capture and fingerprint Gitea SSH host keys for declarative Argo CD trust
+    cmds:
+      - ./scripts/13-gitea-known-hosts-update.sh
+
+  argocd:known-hosts:repair:
+    desc: One-time repair for ConfigMap ownership after imperative argocd cert add-ssh
+    cmds:
+      - ./scripts/14-argocd-known-hosts-repair.sh

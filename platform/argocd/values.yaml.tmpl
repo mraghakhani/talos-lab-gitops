@@ -1,24 +1,19 @@
 # Rendered by: task argocd:render
 # Secrets MUST NOT be placed in this file.
+#
+# IMPORTANT:
+# Do not put HTTP_PROXY/HTTPS_PROXY under global.env.
+# Internal Argo CD components communicate over gRPC and should not inherit
+# the workstation/VM egress proxy. Only repo-server needs outbound proxy
+# settings for remote Git/Helm/OCI sources.
 
 global:
   domain: ${ARGOCD_DOMAIN}
+
   logging:
     format: json
     level: info
-  env:
-    - name: HTTP_PROXY
-      value: ${CLUSTER_HTTP_PROXY}
-    - name: HTTPS_PROXY
-      value: ${CLUSTER_HTTP_PROXY}
-    - name: NO_PROXY
-      value: ${CLUSTER_NO_PROXY}
-    - name: http_proxy
-      value: ${CLUSTER_HTTP_PROXY}
-    - name: https_proxy
-      value: ${CLUSTER_HTTP_PROXY}
-    - name: no_proxy
-      value: ${CLUSTER_NO_PROXY}
+
   networkPolicy:
     create: true
     defaultDenyIngress: false
@@ -29,6 +24,7 @@ configs:
     exec.enabled: false
     timeout.reconciliation: 120s
     timeout.reconciliation.jitter: 30s
+
   rbac:
     policy.default: role:readonly
     policy.matchMode: glob
@@ -51,6 +47,24 @@ server:
 
 repoServer:
   replicas: 1
+
+  # repo-server is the component that fetches remote Git/Helm/OCI sources.
+  # Scope the HTTP proxy here instead of globally so Argo's internal gRPC
+  # traffic never goes through the host proxy.
+  env:
+    - name: HTTP_PROXY
+      value: ${CLUSTER_HTTP_PROXY}
+    - name: HTTPS_PROXY
+      value: ${CLUSTER_HTTP_PROXY}
+    - name: NO_PROXY
+      value: ${CLUSTER_NO_PROXY},argocd-repo-server,argocd-repo-server.argocd,argocd-repo-server.argocd.svc
+    - name: http_proxy
+      value: ${CLUSTER_HTTP_PROXY}
+    - name: https_proxy
+      value: ${CLUSTER_HTTP_PROXY}
+    - name: no_proxy
+      value: ${CLUSTER_NO_PROXY},argocd-repo-server,argocd-repo-server.argocd,argocd-repo-server.argocd.svc
+
   resources:
     requests:
       cpu: 100m

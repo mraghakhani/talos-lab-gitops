@@ -10,6 +10,10 @@ require_env ARGOCD_NAMESPACE
 require_env ARGOCD_CHART_VERSION
 require_env HOST_HTTP_PROXY
 
+known_hosts="$PROJECT_ROOT/config/gitea-known-hosts"
+[[ -s "$known_hosts" ]] \
+  || die "Gitea known-hosts file missing; run task gitea:known-hosts:update"
+
 "$PROJECT_ROOT/scripts/02-render.sh"
 
 log "adding/updating official Argo Helm repository"
@@ -39,6 +43,7 @@ NO_PROXY="localhost,127.0.0.1,192.168.231.0/24" \
     --namespace "$ARGOCD_NAMESPACE" \
     --version "$ARGOCD_CHART_VERSION" \
     --values "$PROJECT_ROOT/.rendered/argocd-values.yaml" \
+    --set-file configs.ssh.extraHosts="$known_hosts" \
     --wait \
     --timeout 10m
 
