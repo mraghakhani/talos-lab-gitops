@@ -1,0 +1,64 @@
+version: "3"
+
+tasks:
+  check:
+    desc: Check workstation tools, .env and kubeconfig
+    cmds:
+      - ./scripts/00-check.sh
+
+  repo:check:
+    desc: Validate repository scripts and YAML
+    cmds:
+      - ./scripts/11-repo-check.sh
+
+  gitea:check:
+    desc: Verify host-side Gitea API is reachable
+    cmds:
+      - ./scripts/01-gitea-check.sh
+
+  gitea:keygen:
+    desc: Generate a local read-only deploy key for Argo CD to Gitea
+    cmds:
+      - ./scripts/07-gitea-keygen.sh
+
+  gitea:key:show:
+    desc: Print the Gitea deploy public key
+    cmds:
+      - ./scripts/08-gitea-key-show.sh
+
+  argocd:render:
+    desc: Render Argo CD bootstrap values and manifests
+    cmds:
+      - ./scripts/02-render.sh
+
+  argocd:install:
+    desc: Install or upgrade pinned Argo CD with Helm
+    deps:
+      - check
+    cmds:
+      - ./scripts/03-argocd-install.sh
+
+  argocd:status:
+    desc: Show Argo CD workload and application status
+    cmds:
+      - ./scripts/04-argocd-status.sh
+
+  argocd:password:
+    desc: Print the initial Argo CD admin password
+    cmds:
+      - ./scripts/05-argocd-password.sh
+
+  argocd:port-forward:
+    desc: Forward Argo CD UI/API to https://127.0.0.1:8080
+    cmds:
+      - ./scripts/06-argocd-port-forward.sh
+
+  argocd:bootstrap:
+    desc: Register Gitea and install the talos-lab root GitOps Application
+    cmds:
+      - ./scripts/09-bootstrap.sh
+
+  argocd:bootstrap:status:
+    desc: Show root GitOps Application sync/health state
+    cmds:
+      - ./scripts/10-bootstrap-status.sh

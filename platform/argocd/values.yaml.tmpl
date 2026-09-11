@@ -1,0 +1,74 @@
+# Rendered by: task argocd:render
+# Secrets MUST NOT be placed in this file.
+
+global:
+  domain: ${ARGOCD_DOMAIN}
+  logging:
+    format: json
+    level: info
+  env:
+    - name: HTTP_PROXY
+      value: ${CLUSTER_HTTP_PROXY}
+    - name: HTTPS_PROXY
+      value: ${CLUSTER_HTTP_PROXY}
+    - name: NO_PROXY
+      value: ${CLUSTER_NO_PROXY}
+    - name: http_proxy
+      value: ${CLUSTER_HTTP_PROXY}
+    - name: https_proxy
+      value: ${CLUSTER_HTTP_PROXY}
+    - name: no_proxy
+      value: ${CLUSTER_NO_PROXY}
+  networkPolicy:
+    create: true
+    defaultDenyIngress: false
+
+configs:
+  cm:
+    admin.enabled: true
+    exec.enabled: false
+    timeout.reconciliation: 120s
+    timeout.reconciliation.jitter: 30s
+  rbac:
+    policy.default: role:readonly
+    policy.matchMode: glob
+
+controller:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+server:
+  replicas: 1
+  service:
+    type: ClusterIP
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+repoServer:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+applicationSet:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+notifications:
+  enabled: true
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+
+dex:
+  enabled: false

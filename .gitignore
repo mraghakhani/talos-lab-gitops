@@ -1,0 +1,23 @@
+# Local configuration
+.env
+.env.local
+
+# Generated bootstrap artifacts
+.rendered/
+state/
+
+# Private keys / credentials
+.secrets/
+*.key
+*.pem
+id_ed25519
+id_rsa
+
+# Kubernetes client state
+kubeconfig
+*.kubeconfig
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store

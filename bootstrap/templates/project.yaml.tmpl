@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform
+  namespace: ${ARGOCD_NAMESPACE}
+spec:
+  description: Talos lab platform and application GitOps
+  sourceRepos:
+    - ${GITOPS_REPO_URL}
+    - https://argoproj.github.io/argo-helm
+    - https://charts.jetstack.io
+    - https://charts.external-secrets.io
+    - https://prometheus-community.github.io/helm-charts
+    - https://grafana.github.io/helm-charts
+    - https://charts.bitnami.com/bitnami
+  destinations:
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  orphanedResources:
+    warn: true
