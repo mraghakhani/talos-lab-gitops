@@ -19,6 +19,8 @@ global:
     defaultDenyIngress: false
 
 configs:
+  params:
+    server.insecure: "true"
   cm:
     admin.enabled: true
     exec.enabled: false
@@ -37,7 +39,6 @@ controller:
       memory: 256Mi
 
 server:
-  insecure: true
   replicas: 1
   service:
     type: ClusterIP
