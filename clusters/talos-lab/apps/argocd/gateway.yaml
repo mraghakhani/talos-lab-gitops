@@ -1,0 +1,22 @@
+apiVersion: gateway.networking.io/v1
+kind: Gateway
+metadata:
+  name: argocd-gateway
+  namespace: argocd
+spec:
+  gatewayClassName: cilium
+  addresses:
+    - type: HostAddress
+      value: 192.168.231.201
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: argocd-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Same
