@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.io/v1
+kind: HTTPRoute
+metadata:
+  name: argocd-route
+  namespace: argocd
+spec:
+  parentRefs:
+    - name: argocd-gateway
+  hostnames:
+    - argocd.lab.dudes.cfd
+  rules:
+    - backendRefs:
+        - name: argocd-server
+          port: 80
