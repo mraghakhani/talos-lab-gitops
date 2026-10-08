@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami 
+  namespace: whoami
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534          # nobody; Go static binary runs fine
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: traefik/whoami:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          imagePullPolicy: IfNotPresent
+          name: whoami
+          ports:
+            - containerPort: 80
+              protocol: TCP
