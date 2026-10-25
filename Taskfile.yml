@@ -56,7 +56,7 @@ tasks:
       - ./scripts/05-argocd-password.sh
 
   argocd:port-forward:
-    desc: Forward Argo CD UI/API to https://127.0.0.1:8080
+    desc: Forward Argo CD UI/API to http://127.0.0.1:8080
     cmds:
       - ./scripts/06-argocd-port-forward.sh
 
