@@ -1,0 +1,12 @@
+# mise project environment — https://mise.jdx.dev
+#
+# Surfaces this repo's .env into the shell when entering the directory
+# (mise activate is wired into Omarchy's zshrc), so kubectl/talosctl/argocd
+# get KUBECONFIG/TALOSCONFIG automatically. .env stays the single source of
+# truth for scripts (scripts/lib.sh sources it) and the shell alike.
+#
+# First time in a clone: run `mise trust` here.
+# Machine-local overrides belong in mise.local.toml (gitignored).
+
+[env]
+_.file = ".env"

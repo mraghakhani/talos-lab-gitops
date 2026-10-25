@@ -14,6 +14,19 @@ task gitea:check
 task gitea:ssh:check
 ```
 
+## Pre-pull Argo CD images
+
+On slow or metered links, pull the chart images onto every node before installing:
+
+```bash
+task argocd:images:prepull
+```
+
+Images are discovered from the pinned chart version and the same rendered
+values that `argocd:install` deploys, so the list can never drift from the
+install. Retries: `ARGOCD_IMAGE_PULL_RETRIES` (default 4), per-attempt
+timeout: `ARGOCD_IMAGE_PULL_TIMEOUT` (default 180s).
+
 ## Argo CD
 
 Install/upgrade bootstrap release:

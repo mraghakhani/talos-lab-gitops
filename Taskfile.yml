@@ -31,6 +31,13 @@ tasks:
     cmds:
       - ./scripts/02-render.sh
 
+  argocd:images:prepull:
+    desc: Pre-pull pinned Argo CD chart images on all nodes
+    deps:
+      - check
+    cmds:
+      - ./scripts/15-argocd-images-prepull.sh
+
   argocd:install:
     desc: Install or upgrade pinned Argo CD with Helm
     deps:
